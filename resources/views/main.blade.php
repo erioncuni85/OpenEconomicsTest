@@ -24,6 +24,11 @@
                 <h3 class="m-0">Regions</h3>
                 <div class="col-md-6 m-2 mx-auto" id="regions">
                 </div>
+                <div class="d-flex justify-content-center align-items-center d-none" id="spinner-regions">
+                    <div class="spinner-border text-primary spinner-border-sm" role="status">
+                        <span class="visually-hidden"></span>
+                    </div>
+                </div>
             </div>
 
             <div class="col-lg-4 text-center p-2">
@@ -43,6 +48,41 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
         integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous">
+    </script>
+
+    <script>
+        const regions = document.getElementById('regions');
+        const species = document.getElementById('species');
+
+        loadRegions();
+
+        function loadRegions()
+        {
+            document.getElementById('spinner-regions').classList.remove('d-none')
+            regions.classList.add('opacity-25')
+
+            fetch('/api/regions')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network error!');
+                    }
+
+                    return response.json();
+                })
+                .then (data => {
+                    document.getElementById('spinner-regions').classList.add('d-none')
+                    regions.classList.remove('opacity-25')
+                    regions.innerHTML = ''
+                    regions.classList.add('border')
+                    data = data.data.results
+                    data.forEach(element => {
+                        regions.innerHTML += `<p class='m-0 p-1 border-bottom custom-row' style='cursor: pointer;' onclick='loadSpecies("${element.identifier}", this)'>${element.name}</p>`
+                    });
+                })
+                .catch(error => {
+                    console.error('Error: ', error)
+                })
+        }
     </script>
 </body>
 
