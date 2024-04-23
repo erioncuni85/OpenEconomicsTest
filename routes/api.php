@@ -10,3 +10,4 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('regions', [RegionController::class, 'index']);
+Route::get('/species/{country}', [SpecieController::class, 'index']);
